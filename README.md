@@ -30,11 +30,17 @@ This is the repository for the ARCA ERP system, a comprehensive ERP solution bui
     cd <repository-directory>
     ```
 
-2.  **Configure the database connection:**
-    The project uses a user secret to store the database connection string. To set this up, navigate to the `Presentation` directory and run the following command, replacing the placeholder with your actual connection string:
+2.  **Configure Secrets:**
+    The project uses user secrets to store sensitive configuration like the database connection string and JWT key. To set these up, navigate to the `Presentation` directory and run the following commands, replacing the placeholder values:
     ```bash
     cd Presentation
+
+    # Set your database connection string
     dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=your_server;Database=ARCAERP;User Id=your_user;Password=your_password;"
+
+    # Set your JWT secret key (must be a long, random string)
+    dotnet user-secrets set "Jwt:Key" "your-super-secret-key-that-is-long-enough"
+
     cd ..
     ```
 

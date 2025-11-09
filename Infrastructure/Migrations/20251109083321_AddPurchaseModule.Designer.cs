@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ARCAERP.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251109050114_AddPurchaseModule")]
+    [Migration("20251109083321_AddPurchaseModule")]
     partial class AddPurchaseModule
     {
         /// <inheritdoc />
@@ -90,6 +90,50 @@ namespace ARCAERP.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("ARCAERP.Domain.Entities.BillOfMaterials", b =>
+                {
+                    b.Property<int>("BillOfMaterialsId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BillOfMaterialsId"));
+
+                    b.Property<int>("FinishedProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BillOfMaterialsId");
+
+                    b.HasIndex("FinishedProductId");
+
+                    b.ToTable("BillOfMaterials");
+                });
+
+            modelBuilder.Entity("ARCAERP.Domain.Entities.BillOfMaterialsItem", b =>
+                {
+                    b.Property<int>("BillOfMaterialsItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BillOfMaterialsItemId"));
+
+                    b.Property<int>("BillOfMaterialsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.HasKey("BillOfMaterialsItemId");
+
+                    b.HasIndex("BillOfMaterialsId");
+
+                    b.HasIndex("ItemId");
+
+                    b.ToTable("BillOfMaterialsItems");
+                });
+
             modelBuilder.Entity("ARCAERP.Domain.Entities.Company", b =>
                 {
                     b.Property<int>("Id")
@@ -140,6 +184,39 @@ namespace ARCAERP.Infrastructure.Migrations
                     b.ToTable("Customers");
                 });
 
+            modelBuilder.Entity("ARCAERP.Domain.Entities.EmployeeMaster", b =>
+                {
+                    b.Property<int>("EmployeeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeId"));
+
+                    b.Property<decimal>("BasicSalary")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("DateOfJoining")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Designation")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("EmployeeCode")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("EmployeeName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("EmployeeId");
+
+                    b.ToTable("EmployeeMasters");
+                });
+
             modelBuilder.Entity("ARCAERP.Domain.Entities.Item", b =>
                 {
                     b.Property<int>("Id")
@@ -164,6 +241,155 @@ namespace ARCAERP.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Items");
+                });
+
+            modelBuilder.Entity("ARCAERP.Domain.Entities.LeaveApplication", b =>
+                {
+                    b.Property<int>("LeaveApplicationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LeaveApplicationId"));
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FromDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("ToDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("LeaveApplicationId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("LeaveApplications");
+                });
+
+            modelBuilder.Entity("ARCAERP.Domain.Entities.Overtime", b =>
+                {
+                    b.Property<int>("OvertimeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OvertimeId"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Hours")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("RatePerHour")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("OvertimeId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("Overtimes");
+                });
+
+            modelBuilder.Entity("ARCAERP.Domain.Entities.Payment", b =>
+                {
+                    b.Property<int>("PaymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsAgainstBill")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Narration")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("PaidTo")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("PurchaseInvoiceId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PaymentId");
+
+                    b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("ARCAERP.Domain.Entities.Project", b =>
+                {
+                    b.Property<int>("ProjectId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProjectId"));
+
+                    b.Property<decimal>("Budget")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ProjectName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ProjectId");
+
+                    b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("ARCAERP.Domain.Entities.ProjectCost", b =>
+                {
+                    b.Property<int>("ProjectCostId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProjectCostId"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CostType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("DateIncurred")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProjectCostId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectCosts");
                 });
 
             modelBuilder.Entity("ARCAERP.Domain.Entities.PurchaseOrder", b =>
@@ -215,6 +441,67 @@ namespace ARCAERP.Infrastructure.Migrations
                     b.HasIndex("PurchaseOrderId");
 
                     b.ToTable("PurchaseOrderItems");
+                });
+
+            modelBuilder.Entity("ARCAERP.Domain.Entities.Receipt", b =>
+                {
+                    b.Property<int>("ReceiptId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReceiptId"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsAgainstBill")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Narration")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<DateTime>("ReceiptDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ReceivedFrom")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int?>("SalesInvoiceId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReceiptId");
+
+                    b.ToTable("Receipts");
+                });
+
+            modelBuilder.Entity("ARCAERP.Domain.Entities.SalaryAdvance", b =>
+                {
+                    b.Property<int>("AdvanceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AdvanceId"));
+
+                    b.Property<DateTime>("AdvanceDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.HasKey("AdvanceId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("SalaryAdvances");
                 });
 
             modelBuilder.Entity("ARCAERP.Domain.Entities.SalesOrder", b =>
@@ -272,6 +559,32 @@ namespace ARCAERP.Infrastructure.Migrations
                     b.ToTable("SalesOrderItems");
                 });
 
+            modelBuilder.Entity("ARCAERP.Domain.Entities.SubContractProject", b =>
+                {
+                    b.Property<int>("SubContractProjectId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubContractProjectId"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("MainProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SubContractorName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("SubContractProjectId");
+
+                    b.HasIndex("MainProjectId");
+
+                    b.ToTable("SubContractProjects");
+                });
+
             modelBuilder.Entity("ARCAERP.Domain.Entities.Supplier", b =>
                 {
                     b.Property<int>("Id")
@@ -295,6 +608,36 @@ namespace ARCAERP.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Suppliers");
+                });
+
+            modelBuilder.Entity("ARCAERP.Domain.Entities.WorkOrder", b =>
+                {
+                    b.Property<int>("WorkOrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WorkOrderId"));
+
+                    b.Property<int>("BillOfMaterialsId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("QuantityToProduce")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("WorkOrderId");
+
+                    b.HasIndex("BillOfMaterialsId");
+
+                    b.ToTable("WorkOrders");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -430,6 +773,69 @@ namespace ARCAERP.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ARCAERP.Domain.Entities.BillOfMaterials", b =>
+                {
+                    b.HasOne("ARCAERP.Domain.Entities.Item", "FinishedProduct")
+                        .WithMany()
+                        .HasForeignKey("FinishedProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FinishedProduct");
+                });
+
+            modelBuilder.Entity("ARCAERP.Domain.Entities.BillOfMaterialsItem", b =>
+                {
+                    b.HasOne("ARCAERP.Domain.Entities.BillOfMaterials", "BillOfMaterials")
+                        .WithMany("RequiredItems")
+                        .HasForeignKey("BillOfMaterialsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ARCAERP.Domain.Entities.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BillOfMaterials");
+
+                    b.Navigation("Item");
+                });
+
+            modelBuilder.Entity("ARCAERP.Domain.Entities.LeaveApplication", b =>
+                {
+                    b.HasOne("ARCAERP.Domain.Entities.EmployeeMaster", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("ARCAERP.Domain.Entities.Overtime", b =>
+                {
+                    b.HasOne("ARCAERP.Domain.Entities.EmployeeMaster", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("ARCAERP.Domain.Entities.ProjectCost", b =>
+                {
+                    b.HasOne("ARCAERP.Domain.Entities.Project", "Project")
+                        .WithMany("ProjectCosts")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
             modelBuilder.Entity("ARCAERP.Domain.Entities.PurchaseOrder", b =>
                 {
                     b.HasOne("ARCAERP.Domain.Entities.Supplier", "Supplier")
@@ -460,6 +866,17 @@ namespace ARCAERP.Infrastructure.Migrations
                     b.Navigation("PurchaseOrder");
                 });
 
+            modelBuilder.Entity("ARCAERP.Domain.Entities.SalaryAdvance", b =>
+                {
+                    b.HasOne("ARCAERP.Domain.Entities.EmployeeMaster", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("ARCAERP.Domain.Entities.SalesOrder", b =>
                 {
                     b.HasOne("ARCAERP.Domain.Entities.Customer", "Customer")
@@ -488,6 +905,28 @@ namespace ARCAERP.Infrastructure.Migrations
                     b.Navigation("Item");
 
                     b.Navigation("SalesOrder");
+                });
+
+            modelBuilder.Entity("ARCAERP.Domain.Entities.SubContractProject", b =>
+                {
+                    b.HasOne("ARCAERP.Domain.Entities.Project", "MainProject")
+                        .WithMany("SubContractProjects")
+                        .HasForeignKey("MainProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MainProject");
+                });
+
+            modelBuilder.Entity("ARCAERP.Domain.Entities.WorkOrder", b =>
+                {
+                    b.HasOne("ARCAERP.Domain.Entities.BillOfMaterials", "BillOfMaterials")
+                        .WithMany()
+                        .HasForeignKey("BillOfMaterialsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BillOfMaterials");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -539,6 +978,18 @@ namespace ARCAERP.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ARCAERP.Domain.Entities.BillOfMaterials", b =>
+                {
+                    b.Navigation("RequiredItems");
+                });
+
+            modelBuilder.Entity("ARCAERP.Domain.Entities.Project", b =>
+                {
+                    b.Navigation("ProjectCosts");
+
+                    b.Navigation("SubContractProjects");
                 });
 
             modelBuilder.Entity("ARCAERP.Domain.Entities.PurchaseOrder", b =>
