@@ -15,6 +15,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<PurchaseOrderItem> PurchaseOrderItems { get; set; }
     public DbSet<Supplier> Suppliers { get; set; }
     public DbSet<Item> Items { get; set; }
+    public DbSet<SalesOrder> SalesOrders { get; set; }
+    public DbSet<SalesOrderItem> SalesOrderItems { get; set; }
+    public DbSet<Customer> Customers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -26,6 +29,16 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         });
 
         builder.Entity<PurchaseOrderItem>(entity =>
+        {
+            entity.Property(e => e.UnitPrice).HasPrecision(18, 2);
+        });
+
+        builder.Entity<SalesOrder>(entity =>
+        {
+            entity.Property(e => e.TotalAmount).HasPrecision(18, 2);
+        });
+
+        builder.Entity<SalesOrderItem>(entity =>
         {
             entity.Property(e => e.UnitPrice).HasPrecision(18, 2);
         });

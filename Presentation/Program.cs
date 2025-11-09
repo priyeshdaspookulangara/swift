@@ -1,6 +1,8 @@
 using System.Text;
+using ARCAERP.Application.Interfaces;
 using ARCAERP.Domain.Entities;
 using ARCAERP.Infrastructure.Data;
+using ARCAERP.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -35,10 +37,14 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
+builder.Services.AddScoped<ICompanyService, CompanyService>();
+builder.Services.AddScoped<ISalesService, SalesService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -53,5 +59,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();

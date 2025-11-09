@@ -1,7 +1,6 @@
+using ARCAERP.Application.Interfaces;
 using ARCAERP.Domain.Entities;
-using ARCAERP.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ARCAERP.Presentation.Controllers;
 
@@ -9,38 +8,36 @@ namespace ARCAERP.Presentation.Controllers;
 [Route("api/[controller]")]
 public class CompanyController : ControllerBase
 {
-    private readonly ApplicationDbContext _context;
+    private readonly ICompanyService _companyService;
 
-    public CompanyController(ApplicationDbContext context)
+    public CompanyController(ICompanyService companyService)
     {
-        _context = context;
+        _companyService = companyService;
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Company>>> GetCompanies()
     {
-        return await _context.Companies.ToListAsync();
+        return Ok(await _companyService.GetCompanies());
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Company>> GetCompany(int id)
     {
-        var company = await _context.Companies.FindAsync(id);
+        var company = await _companyService.GetCompany(id);
 
         if (company == null)
         {
             return NotFound();
         }
 
-        return company;
+        return Ok(company);
     }
 
     [HttpPost]
     public async Task<ActionResult<Company>> PostCompany(Company company)
     {
-        _context.Companies.Add(company);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction("GetCompany", new { id = company.Id }, company);
+        var createdCompany = await _companyService.CreateCompany(company);
+        return CreatedAtAction("GetCompany", new { id = createdCompany.Id }, createdCompany);
     }
 }
